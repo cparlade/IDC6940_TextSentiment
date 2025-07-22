@@ -41,7 +41,43 @@ The introduction should:
 -   Clearly state the problem or question you're addressing.
 
 
-Today’s markets move nearly **instantaneously** to news headlines. A single Bloomberg article or tweet can push a mega-cap’s share price by **hundreds of billions** before most humans can finish reading it. For data-driven traders, headline sentiment is therefore a first-line signal that is used to track order flow, flag risk, and populate real-time dashboards. The question is **which sentiment engine to trust**: a lightweight rule-based lexicon written in 2014, or  a 110 million-parameter transformer fine-tuned last night?
+Today’s markets move nearly **instantaneously** to news headlines. 
+A single Bloomberg article or tweet can push a mega-cap’s share price by 
+**hundreds of billions** before most humans can finish reading it. For 
+data-driven traders, headline sentiment is therefore a first-line signal 
+that is used to track order flow, flag risk, and populate real-time 
+dashboards. The question is **which sentiment engine to trust**: a 
+lightweight rule-based lexicon written in 2014, or  a 110 million-
+parameter transformer fine-tuned last night?
+
+## 1.1 Research question
+
+> *On the Financial PhraseBank corpus, does a fine‑tuned FinBERT model
+> outperform the classic VADER lexicon—measured by macro‑F1 and overall
+> accuracy—when classifying headlines as Positive, Neutral, or
+> Negative?*
+
+## 1.2 Why it matters
+
+- **Data‑science lens**  — Quantifies the *return on GPU*: is
+  domain‑specific fine‑tuning worth the extra carbon, cost, and
+  complexity compared to a zero‑training heuristic [@hutto2014vader]?
+- **Trading lens**  — Higher‑fidelity sentiment feeds translate directly
+  into fewer false long/short triggers, cleaner event studies, and more
+  accurate thematic basket construction.  Even a five‑point F1 lift can
+  save basis points on execution.
+
+| Component | Choice |
+|-----------|--------|
+| **Dataset** | *Financial PhraseBank* — “Sentences\_AllAgree” split (4 ,840 labelled sentences). |
+| **Model A** | **VADER** rule‑based scorer with 7 k‑term lexicon [@hutto2014vader]. |
+| **Model B** | **FinBERT** (`ProsusAI/finbert`) fine‑tuned for three epochs on the same training split [@yang2024finbert]. |
+| **Metrics** | Macro‑F1, overall accuracy, confusion matrix; CPU/GPU runtime. |
+
+
+The outcome will show whether heavy
+transformers deliver practical lift over a free, no‑GPU baseline in a
+realistic “small‑data” finance setting.
 <!-- -->
 
 -   Introduce why it is relevant needs.
@@ -63,9 +99,40 @@ The PCA [@daffertshofer2004pca]*. Topology can be used in machine learning [@ada
 *This is my work and I want to add more work...*
 
 ## Methods
+### Overview  
+- **Goal** Compare a *rule‑based* and a *transformer* approach for classifying headline sentiment.  
+- **Dataset** Financial PhraseBank (Sentences_AllAgree, N = 4 ,840).  
+- **Train/Test Split** 80 % train : 20 % test (stratified).  
+- **Evaluation Metrics** Macro‑F1, accuracy, confusion matrix; runtime footprint.
 
 -   Detail the models or algorithms used.
+### Baseline Model – VADER  
 
+- **Algorithm** 7 k‑term lexicon + 5 heuristic adjustments  
+  (negation, degree adverbs, all‑caps, punctuation emphasis, contrastive “but”).  
+- **Implementation** `vaderSentiment 3.3.2` (Python).  
+- **Label Mapping**  
+  - `compound ≥ 0.05 is Positive`  
+  - `compound ≤ –0.05 is Negative`  
+  - else `Neutral`
+- **Complexity** O(N) pass over sentences; no training phase.
+
+### Fine‑Tuned Transformer – FinBERT  
+Current proposed second model comparison below, with guidance from an LLM. Will change
+
+- **Base Model** `ProsusAI/finbert` (110 M params, BERT‑Base).  
+- **Fine‑Tuning**  
+  - Loss cross‑entropy on 3‑class PhraseBank labels  
+  - Hyper‑params 3 epochs · batch 32 · lr 2 × 10⁻⁵ · max_len 64  
+  - Hardware single T4 GPU (~6 min).  
+- **Output Mapping** soft‑max log‑probs -> `Positive/Neutral/Negative`.  
+- **Regularization** early stopping on validation F1.
+
+*Objective*  
+\[
+\mathcal L = -\sum_{i=1}^{N}\sum_{c\in\{+,0,-\}}
+  y_{ic}\;\log p_{\theta}(c\,|\,h_i)
+\]
 -   Justify your choices based on the problem and data.
 
 *The common non-parametric regression model is*
