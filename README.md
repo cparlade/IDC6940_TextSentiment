@@ -1,6 +1,6 @@
 # Text Sentiment Capstone Project
 
-This project analyzes customer support messages using sentiment analysis and machine learning techniques to predict escalation risk.
+This capstone tests whether transformer‑based sentiment (FinBERT) out‑predicts a classic rule‑based lexicon (VADER) for same‑day percentage moves in the S&P 500.
 
 ## Structure
 - `data/raw`: Original dataset
