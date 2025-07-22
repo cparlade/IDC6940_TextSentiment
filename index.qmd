@@ -40,6 +40,8 @@ The introduction should:
 
 -   Clearly state the problem or question you're addressing.
 
+
+Today’s markets move nearly **instantaneously** to news headlines. A single Bloomberg article or tweet can push a mega-cap’s share price by **hundreds of billions** before most humans can finish reading it. For data-driven traders, headline sentiment is therefore a first-line signal that is used to track order flow, flag risk, and populate real-time dashboards. The question is **which sentiment engine to trust**: a lightweight rule-based lexicon written in 2014, or  a 110 million-parameter transformer fine-tuned last night?
 <!-- -->
 
 -   Introduce why it is relevant needs.
