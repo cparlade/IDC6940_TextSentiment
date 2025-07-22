@@ -1,7 +1,7 @@
 ---
-title: "Present a great story for data science projects"
-subtitle: "This is a Slide Template"
-author: "Students names (Advisor: Dr. Cohen)"
+title: "Headline News Sentiment & the S&P 500"
+subtitle: "How does the sentiment in headline news affect the S&P 500 index price"
+author: "Christian Parlade (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   revealjs
