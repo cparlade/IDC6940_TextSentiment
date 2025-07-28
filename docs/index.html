@@ -3991,6 +3991,10 @@ window.Quarto = {
     <a class="nav-link" href="./04_results.html"> 
 <span class="menu-text">Page Title</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./slides.html"> 
+<span class="menu-text">Headline News Sentiment &amp; the S&amp;P 500</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -4072,7 +4076,7 @@ Important
 <section id="why-it-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-it-matters">1.2 Why it matters</h2>
 <ul>
-<li><strong>Data‑science lens</strong>  — Quantifies the <em>return on GPU</em>: is domain‑specific fine‑tuning worth the extra carbon, cost, and complexity compared to a zero‑training heuristic <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref"><strong>hutto2014vader?</strong></a>)</span>?</li>
+<li><strong>Data‑science lens</strong>  — Quantifies the <em>return on GPU</em>: is domain‑specific fine‑tuning worth the extra carbon, cost, and complexity compared to a zero‑training heuristic <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref">Hutto and Gilbert 2014</a>)</span>?</li>
 <li><strong>Trading lens</strong>  — Higher‑fidelity sentiment feeds translate directly into fewer false long/short triggers, cleaner event studies, and more accurate thematic basket construction. Even a five‑point F1 lift can save basis points on execution.</li>
 </ul>
 <table class="caption-top table">
@@ -4093,11 +4097,11 @@ Important
 </tr>
 <tr class="even">
 <td><strong>Model A</strong></td>
-<td><strong>VADER</strong> rule‑based scorer with 7 k‑term lexicon <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref"><strong>hutto2014vader?</strong></a>)</span>.</td>
+<td><strong>VADER</strong> rule‑based scorer with 7 k‑term lexicon <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref">Hutto and Gilbert 2014</a>)</span>.</td>
 </tr>
 <tr class="odd">
 <td><strong>Model B</strong></td>
-<td><strong>FinBERT</strong> (<code>ProsusAI/finbert</code>) fine‑tuned for three epochs on the same training split <span class="citation" data-cites="yang2024finbert">(<a href="#ref-yang2024finbert" role="doc-biblioref"><strong>yang2024finbert?</strong></a>)</span>.</td>
+<td><strong>FinBERT</strong> (<code>ProsusAI/finbert</code>) fine‑tuned for three epochs on the same training split <span class="citation" data-cites="yang2024finbert">(<a href="#ref-yang2024finbert" role="doc-biblioref">Yang, Uy, and Huang 2020</a>)</span>.</td>
 </tr>
 <tr class="even">
 <td><strong>Metrics</strong></td>
@@ -4225,11 +4229,17 @@ Daffertshofer, Andreas, Claudine JC Lamoth, Onno G Meijer, and Peter J Beek. 200
 <div id="ref-efr2008" class="csl-entry" role="listitem">
 Efromovich, S. 2008. <em>Nonparametric Curve Estimation: Methods, Theory, and Applications</em>. Springer Series in Statistics. Springer New York. <a href="https://books.google.com/books?id=mdoLBwAAQBAJ">https://books.google.com/books?id=mdoLBwAAQBAJ</a>.
 </div>
+<div id="ref-hutto2014vader" class="csl-entry" role="listitem">
+Hutto, C. J., and Eric Gilbert. 2014. <span>“VADER: A Parsimonious Rule-Based Model for Sentiment Analysis of Social Media Text.”</span> In <em>Proceedings of the International AAAI Conference on Web and Social Media</em>.
+</div>
 <div id="ref-R-base" class="csl-entry" role="listitem">
 R Core Team. 2019. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.
 </div>
 <div id="ref-wang2014" class="csl-entry" role="listitem">
 Wang, Ming. 2014. <span>“Generalized Estimating Equations in Longitudinal Data Analysis: A Review and Recent Developments.”</span> <em>Advances in Statistics</em> 2014.
+</div>
+<div id="ref-yang2024finbert" class="csl-entry" role="listitem">
+Yang, Yi, Mark Christopher Siy Uy, and Allen Huang. 2020. <span>“FinBERT: Pre-Trained Language Model for Financial Communications.”</span> <a href="https://arxiv.org/abs/2006.08097">https://arxiv.org/abs/2006.08097</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
