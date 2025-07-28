@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+  - index.qmd
+  - 03_data_analysis.qmd
+  - 04_results.qmd
+  - slides.qmd   # keep if you use it
+
+website:
+  title: "FinBERT vs VADER"
+  navbar:
+    left:
+      - file: index.qmd
+      - file: 03_data_analysis.qmd
+      - file: 04_results.qmd
+
+format:
+  html:
+    theme: cosmo
+
+execute:
+  echo: true
+  warning: false
