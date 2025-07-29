@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Page Title – FinBERT vs VADER</title>
+<title>Results &amp; Discussion – FinBERT vs VADER</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,10 +20,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,6 +102,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -98,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./04_results.html" aria-current="page"> 
-<span class="menu-text">Page Title</span></a>
+<span class="menu-text">Results &amp; Discussion</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./slides.html"> 
@@ -125,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Page Title</h1>
+<h1 class="title">Results &amp; Discussion</h1>
 </div>
 
 
@@ -142,13 +180,79 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>#| label: load_preds import pandas as pd, numpy as np, seaborn as sns, matplotlib.pyplot as plt from sklearn.metrics import classification_report, confusion_matrix, f1_score, accuracy_score</p>
-<p>vader = pd.read_csv(“data/processed/vader_preds.csv”) finb = pd.read_csv(“data/processed/finbert_preds.csv”)</p>
-<p>y_true = vader[‘label_name’] # same as finb[‘label_name’] labels = [“negative”,“neutral”,“positive”]</p>
-<p>def metrics(df): f1 = f1_score(y_true, df[‘pred’], average=‘macro’) acc = accuracy_score(y_true, df[‘pred’]) return f1, acc</p>
-<p>m_vader = metrics(vader) m_finb = metrics(finb)</p>
-<p>summary = pd.DataFrame({ “Model”: [“VADER”, “FinBERT (fine-tuned)”], “Macro‑F1”: [m_vader[0], m_finb[0]], “Accuracy”: [m_vader[1], m_finb[1]] }).round(3) summary</p>
-<p>#| label: cmaps #| fig-cap: “Confusion matrices (rows=true, cols=pred)” fig, axes = plt.subplots(1,2, figsize=(9,3.6), constrained_layout=True) for j,(name, df) in enumerate([(“VADER”, vader), (“FinBERT”, finb)]): cm = confusion_matrix(y_true, df[‘pred’], labels=labels) sns.heatmap(cm, annot=True, fmt=“d”, cmap=“Blues”, xticklabels=labels, yticklabels=labels, ax=axes[j]) axes[j].set_title(name) axes[j].set_xlabel(“Predicted”); axes[j].set_ylabel(“True”) plt.show()</p>
+<div id="cell-load_preds" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report, confusion_matrix, f1_score, accuracy_score</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>vader <span class="op">=</span> pd.read_csv(<span class="st">"data/processed/vader_preds.csv"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>finb  <span class="op">=</span> pd.read_csv(<span class="st">"data/processed/finbert_preds.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>y_true <span class="op">=</span> vader[<span class="st">'label_name'</span>]  <span class="co"># same as finb['label_name']</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"negative"</span>,<span class="st">"neutral"</span>,<span class="st">"positive"</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metrics(df):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    f1 <span class="op">=</span> f1_score(y_true, df[<span class="st">'pred'</span>], average<span class="op">=</span><span class="st">'macro'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> accuracy_score(y_true, df[<span class="st">'pred'</span>])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f1, acc</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>m_vader <span class="op">=</span> metrics(vader)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>m_finb  <span class="op">=</span> metrics(finb)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model"</span>: [<span class="st">"VADER"</span>, <span class="st">"FinBERT (fine-tuned)"</span>],</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Macro‑F1"</span>: [m_vader[<span class="dv">0</span>], m_finb[<span class="dv">0</span>]],</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Accuracy"</span>: [m_vader[<span class="dv">1</span>], m_finb[<span class="dv">1</span>]]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>}).<span class="bu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="load_preds" class="cell-output cell-output-display" data-execution_count="1">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th">Macro‑F1</th>
+<th data-quarto-table-cell-role="th">Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>VADER</td>
+<td>0.493</td>
+<td>0.583</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>FinBERT (fine-tuned)</td>
+<td>0.963</td>
+<td>0.969</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-cmaps" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="fl">3.6</span>), constrained_layout<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j,(name, df) <span class="kw">in</span> <span class="bu">enumerate</span>([(<span class="st">"VADER"</span>, vader), (<span class="st">"FinBERT"</span>, finb)]):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    cm <span class="op">=</span> confusion_matrix(y_true, df[<span class="st">'pred'</span>], labels<span class="op">=</span>labels)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(cm, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">"d"</span>, cmap<span class="op">=</span><span class="st">"Blues"</span>, xticklabels<span class="op">=</span>labels, yticklabels<span class="op">=</span>labels, ax<span class="op">=</span>axes[j])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    axes[j].set_title(name)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    axes[j].set_xlabel(<span class="st">"Predicted"</span>)<span class="op">;</span> axes[j].set_ylabel(<span class="st">"True"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="cmaps" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="04_results_files/figure-html/cmaps-output-1.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion matrices (rows=true, cols=pred)</figcaption>
+</figure>
+</div>
+</div>
+</div>
 
 
 
