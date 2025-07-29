@@ -1,0 +1,3 @@
+Model,Macro‑F1,Accuracy
+VADER,0.493,0.583
+FinBERT,0.963,0.969
