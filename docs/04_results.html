@@ -90,11 +90,11 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Writing a great story for data science projects — Spring 2025</span></a>
+<span class="menu-text">Writing a great story for data science projects - Summer 2025</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./03_data_analysis.html"> 
-<span class="menu-text">Page Title</span></a>
+<span class="menu-text">3 Data &amp; EDA</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./04_results.html" aria-current="page"> 
@@ -138,6 +138,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>#| label: load_preds import pandas as pd, numpy as np, seaborn as sns, matplotlib.pyplot as plt from sklearn.metrics import classification_report, confusion_matrix, f1_score, accuracy_score</p>
+<p>vader = pd.read_csv(“data/processed/vader_preds.csv”) finb = pd.read_csv(“data/processed/finbert_preds.csv”)</p>
+<p>y_true = vader[‘label_name’] # same as finb[‘label_name’] labels = [“negative”,“neutral”,“positive”]</p>
+<p>def metrics(df): f1 = f1_score(y_true, df[‘pred’], average=‘macro’) acc = accuracy_score(y_true, df[‘pred’]) return f1, acc</p>
+<p>m_vader = metrics(vader) m_finb = metrics(finb)</p>
+<p>summary = pd.DataFrame({ “Model”: [“VADER”, “FinBERT (fine-tuned)”], “Macro‑F1”: [m_vader[0], m_finb[0]], “Accuracy”: [m_vader[1], m_finb[1]] }).round(3) summary</p>
+<p>#| label: cmaps #| fig-cap: “Confusion matrices (rows=true, cols=pred)” fig, axes = plt.subplots(1,2, figsize=(9,3.6), constrained_layout=True) for j,(name, df) in enumerate([(“VADER”, vader), (“FinBERT”, finb)]): cm = confusion_matrix(y_true, df[‘pred’], labels=labels) sns.heatmap(cm, annot=True, fmt=“d”, cmap=“Blues”, xticklabels=labels, yticklabels=labels, ax=axes[j]) axes[j].set_title(name) axes[j].set_xlabel(“Predicted”); axes[j].set_ylabel(“True”) plt.show()</p>
 
 
 
