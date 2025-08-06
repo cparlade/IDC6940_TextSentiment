@@ -50,17 +50,17 @@ parameter transformer fine-tuned last night?
 
 ## 1.2 Why it matters
 
-- **Data‑science lens**  — Quantifies the *return on GPU*: is
+- **Data‑science lens**: Quantifies the *return on GPU*: is
   domain‑specific fine‑tuning worth the extra carbon, cost, and
   complexity compared to a zero‑training heuristic [@hutto2014vader]?
-- **Trading lens**  — Higher‑fidelity sentiment feeds translate directly
+- **Trading lens**: Higher‑fidelity sentiment feeds translate directly
   into fewer false long/short triggers, cleaner event studies, and more
   accurate thematic basket construction.  Even a five‑point F1 lift can
   save basis points on execution.
 
 | Component | Choice |
 |-----------|--------|
-| **Dataset** | *Financial PhraseBank* — “Sentences\_AllAgree” split (4 ,840 labelled sentences). |
+| **Dataset** | *Financial PhraseBank* : “Sentences\_AllAgree” split (4 ,840 labelled sentences). |
 | **Model A** | **VADER** rule‑based scorer with 7 k‑term lexicon [@hutto2014vader]. |
 | **Model B** | **FinBERT** (`ProsusAI/finbert`) fine‑tuned for three epochs on the same training split [@yang2024finbert]. |
 | **Metrics** | Macro‑F1, overall accuracy, confusion matrix; CPU/GPU runtime. |
@@ -81,7 +81,7 @@ realistic “small‑data” finance setting.
 - **Evaluation Metrics** Macro‑F1, accuracy, confusion matrix; runtime footprint.
 
 -   Detail the models or algorithms used.
-### Baseline Model – VADER  
+### Baseline Model: VADER  
 
 - **Algorithm** 7 k‑term lexicon + 5 heuristic adjustments  
   (negation, degree adverbs, all‑caps, punctuation emphasis, contrastive “but”).  
@@ -92,7 +92,7 @@ realistic “small‑data” finance setting.
   - else `Neutral`
 - **Complexity** O(N) pass over sentences; no training phase.
 
-### Fine‑Tuned Transformer – FinBERT  
+### Fine‑Tuned Transformer: FinBERT  
 Current proposed second model comparison below, with guidance from an LLM. Will change
 
 - **Base Model** `ProsusAI/finbert` (110 M params, BERT‑Base).  

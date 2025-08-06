@@ -3877,7 +3877,7 @@ vertical-align: -.125em;
   <li><a href="#why-it-matters" id="toc-why-it-matters" class="nav-link" data-scroll-target="#why-it-matters">1.2 Why it matters</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
-  <li><a href="#finetuned-transformer-finbert" id="toc-finetuned-transformer-finbert" class="nav-link" data-scroll-target="#finetuned-transformer-finbert">Fine‑Tuned Transformer – FinBERT</a></li>
+  <li><a href="#finetuned-transformer-finbert" id="toc-finetuned-transformer-finbert" class="nav-link" data-scroll-target="#finetuned-transformer-finbert">Fine‑Tuned Transformer: FinBERT</a></li>
   </ul></li>
   <li><a href="#analysis-and-results" id="toc-analysis-and-results" class="nav-link" data-scroll-target="#analysis-and-results">Analysis and Results</a>
   <ul class="collapse">
@@ -3938,8 +3938,8 @@ vertical-align: -.125em;
 <section id="why-it-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-it-matters">1.2 Why it matters</h2>
 <ul>
-<li><strong>Data‑science lens</strong>  — Quantifies the <em>return on GPU</em>: is domain‑specific fine‑tuning worth the extra carbon, cost, and complexity compared to a zero‑training heuristic <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref">Hutto and Gilbert 2014</a>)</span>?</li>
-<li><strong>Trading lens</strong>  — Higher‑fidelity sentiment feeds translate directly into fewer false long/short triggers, cleaner event studies, and more accurate thematic basket construction. Even a five‑point F1 lift can save basis points on execution.</li>
+<li><strong>Data‑science lens</strong>: Quantifies the <em>return on GPU</em>: is domain‑specific fine‑tuning worth the extra carbon, cost, and complexity compared to a zero‑training heuristic <span class="citation" data-cites="hutto2014vader">(<a href="#ref-hutto2014vader" role="doc-biblioref">Hutto and Gilbert 2014</a>)</span>?</li>
+<li><strong>Trading lens</strong>: Higher‑fidelity sentiment feeds translate directly into fewer false long/short triggers, cleaner event studies, and more accurate thematic basket construction. Even a five‑point F1 lift can save basis points on execution.</li>
 </ul>
 <table class="caption-top table">
 <colgroup>
@@ -3955,7 +3955,7 @@ vertical-align: -.125em;
 <tbody>
 <tr class="odd">
 <td><strong>Dataset</strong></td>
-<td><em>Financial PhraseBank</em> — “Sentences_AllAgree” split (4 ,840 labelled sentences).</td>
+<td><em>Financial PhraseBank</em> : “Sentences_AllAgree” split (4 ,840 labelled sentences).</td>
 </tr>
 <tr class="even">
 <td><strong>Model A</strong></td>
@@ -3981,7 +3981,7 @@ vertical-align: -.125em;
 - <strong>Train/Test Split</strong> 80 % train : 20 % test (stratified).<br>
 - <strong>Evaluation Metrics</strong> Macro‑F1, accuracy, confusion matrix; runtime footprint.</p>
 <ul>
-<li><p>Detail the models or algorithms used. ### Baseline Model – VADER</p></li>
+<li><p>Detail the models or algorithms used. ### Baseline Model: VADER</p></li>
 <li><p><strong>Algorithm</strong> 7 k‑term lexicon + 5 heuristic adjustments<br>
 (negation, degree adverbs, all‑caps, punctuation emphasis, contrastive “but”).<br>
 </p></li>
@@ -3998,7 +3998,7 @@ vertical-align: -.125em;
 <li><p><strong>Complexity</strong> O(N) pass over sentences; no training phase.</p></li>
 </ul>
 <section id="finetuned-transformer-finbert" class="level3">
-<h3 class="anchored" data-anchor-id="finetuned-transformer-finbert">Fine‑Tuned Transformer – FinBERT</h3>
+<h3 class="anchored" data-anchor-id="finetuned-transformer-finbert">Fine‑Tuned Transformer: FinBERT</h3>
 <p>Current proposed second model comparison below, with guidance from an LLM. Will change</p>
 <ul>
 <li><strong>Base Model</strong> <code>ProsusAI/finbert</code> (110 M params, BERT‑Base).<br>
