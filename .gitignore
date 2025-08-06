@@ -5,3 +5,11 @@
 
 # installers
 *.deb
+
+/.quarto/
+.venv/
+_freeze/
+data/
+**/.ipynb_checkpoints/
+**/__pycache__/
+.DS_Store
