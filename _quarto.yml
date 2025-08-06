@@ -2,28 +2,32 @@ project:
   type: website
   output-dir: docs
   render:
-  - index.qmd
-  - 03_data_analysis.qmd
-  - 04_results.qmd
-  - slides.qmd   # keep if you use it
-  - hello.qmd
-
-jupyter: python3
+    - index.qmd
+    - 03_data_analysis.qmd
+    - 04_results.qmd
+    - slides.qmd
+    - hello.qmd
 
 website:
   title: "FinBERT vs VADER"
   navbar:
     left:
-      - file: index.qmd
-      - file: 03_data_analysis.qmd
-      - file: 04_results.qmd
-      - file: slides.qmd
-      - file: hello.qmd
+      - text: Home
+        file: index.qmd
+      - text: Data & EDA
+        file: 03_data_analysis.qmd
+      - text: Results
+        file: 04_results.qmd
+      - text: Slides
+        file: slides.qmd
 
 format:
   html:
     theme: cosmo
+    toc: true
+    code-fold: false
 
 execute:
   echo: true
   warning: false
+  message: false

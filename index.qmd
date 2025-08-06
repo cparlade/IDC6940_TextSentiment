@@ -1,11 +1,9 @@
 ---
-title: "Writing a great story for data science projects - Summer 2025"
-subtitle: "Report Template (Quarto)"
+title: "Stock Market Headline News Sentiment"
+subtitle: "One dataset • Two models • A fair comparison"
 author: "Christian Parlade (Advisor: Dr. Cohen)"
 
-# use one of these (pick ONE)
 date: today            # shows today's date
-# date: last-modified  # or show last modified date
 
 date-format: long
 jupyter: python3
@@ -29,24 +27,9 @@ editor:
 Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
 to edit)
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
-
-Carefully read this template since it has instructions and tips to
-writing!
-:::
 
 ## Introduction
 
-The introduction should:
-
--   Develop a storyline that captures attention and maintains interest.
-
--   Your audience is your peers
-
--   Clearly state the problem or question you're addressing.
 
 
 Today’s markets move nearly **instantaneously** to news headlines. 
@@ -88,23 +71,7 @@ transformers deliver practical lift over a free, no‑GPU baseline in a
 realistic “small‑data” finance setting.
 <!-- -->
 
--   Introduce why it is relevant needs.
 
--   Provide an overview of your approach.
-
-Example of writing including citing references:
-
-*This is an introduction to ..... regression, which is a non-parametric
-estimator that estimates the conditional expectation of two variables
-which is random. The goal of a kernel regression is to discover the
-non-linear relationship between two random variables. To discover the
-non-linear relationship, kernel estimator or kernel smoothing is the
-main method to estimate the curve for non-parametric statistics. In
-kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]*. Topology can be used in machine learning [@adams2021topology]
-
-*This is my work and I want to add more work...*
 
 ## Methods
 ### Overview  
@@ -149,43 +116,6 @@ Current proposed second model comparison below, with guidance from an LLM. Will 
 
 ### Data Exploration and Visualization
 
--   Describe your data sources and collection process.
-
--   Present initial findings and insights through visualizations.
-
--   Highlight unexpected patterns or anomalies.
-
-A study was conducted to determine how...
-
-```{r, warning=FALSE, echo=T, message=FALSE}
-# loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
-```
-
-```{r, warning=FALSE, echo=TRUE}
-# Load Data
-kable(head(murders))
-
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
-
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
-
-```
-
 ### Modeling and Results
 
 -   Explain your data preprocessing and cleaning steps.
@@ -196,9 +126,7 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 
 -   **Tell a story about what the data reveals.**
 
-```{r}
 
-```
 
 ### Conclusion
 
@@ -207,3 +135,7 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 -   Discuss the implications of your results.
 
 ## References
+
+- Hutto & Gilbert (2014). VADER: A Parsimonious Rule-Based Model for Sentiment Analysis.
+- Yang, Uy, & Huang (2020). FinBERT: Pre-trained Language Model for Financial Communications (arXiv:2006.08097).
+- Loughran & McDonald (2011). When Is a Liability Not a Liability? Journal of Finance (finance sentiment lexicon context).

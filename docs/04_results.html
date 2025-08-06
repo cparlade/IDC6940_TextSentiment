@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -128,23 +128,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Writing a great story for data science projects - Summer 2025</span></a>
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./03_data_analysis.html"> 
-<span class="menu-text">3 Data &amp; EDA</span></a>
+<span class="menu-text">Data &amp; EDA</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./04_results.html" aria-current="page"> 
-<span class="menu-text">Results &amp; Discussion</span></a>
+<span class="menu-text">Results</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./slides.html"> 
-<span class="menu-text">Headline News Sentiment &amp; the S&amp;P 500</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./hello.html"> 
-<span class="menu-text">Hello Quarto</span></a>
+<span class="menu-text">Slides</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -157,7 +153,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -232,9 +230,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(test), y_true.value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="load_preds" class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(453,
+<pre><code>(452,
  label_name
- neutral     278
+ neutral     277
  positive    114
  negative     61
  Name: count, dtype: int64)</code></pre>
@@ -273,14 +271,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>VADER</td>
-<td>0.493</td>
-<td>0.583</td>
+<td>0.487</td>
+<td>0.575</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>FinBERT</td>
-<td>0.963</td>
-<td>0.969</td>
+<td>0.925</td>
+<td>0.938</td>
 </tr>
 </tbody>
 </table>

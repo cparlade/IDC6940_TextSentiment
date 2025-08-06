@@ -1,8 +1,8 @@
 ---
-title: "Headline News Sentiment & the S&P 500"
+title: "Stock Market Headline News Sentiment"
 subtitle: "One dataset • Two models • A fair comparison"
 author: "Christian Parlade (Advisor: Dr. Cohen)"
-date: today
+date: "08-05-2025"
 format:
   revealjs:
     slide-number: true
@@ -16,11 +16,28 @@ execute:
   message: false
 ---
 
-## 1) What am I testing?
+## 0) Agenda
+
+- Problem & hypothesis
+
+- Data (Financial PhraseBank)
+
+- Baseline vs. Transformer
+
+- Train/test & metrics
+
+- Results -> where each model wins/loses
+
+- Cost, limits, next steps
+
+---
+
+## 1) Problem
 
 - **Question:** Do short **financial headlines** carry sentiment we can reliably classify?
 - **Why care:** quick market mood checks, features for trading models, sanity-checks on dashboards.
-- **Plan:** same dataset, same split — compare a **rule-based baseline** vs a **transformer**.
+- **Plan:** same dataset, same split to compare a **rule-based baseline** vs a **transformer**.
+- **Hypothesis:** A finance-tuned transformer (FinBERT) will beat a rule-based baseline (VADER), especially on hedged or mixed-polarity headlines.
 
 ---
 
@@ -63,6 +80,7 @@ if (p/"phrasebank_train.csv").exists() and (p/"phrasebank_test.csv").exists():
 else:
     print("Waiting on phrasebank_train/test CSVs.")
 ```
+- Neutral dominates -> strong prior; models must beat “predict neutral.”
 
 ---
 
@@ -78,25 +96,21 @@ else:
     print("Length plot skipped (no train CSV).")
 ```
 
-- Neutral is typically largest -> easy baseline: “predict neutral.”
-
-- Models need to beat that without collapsing into neutral.
-
 ---
 
 ## 5) Models 
 
 - **VADER (baseline)**
 
-- Lexicon + rules (negation, intensity, punctuation, ALL-CAPS)
+    - Lexicon + rules (negation, intensity, punctuation, ALL-CAPS)
 
-- Fast & transparent; tends to over-predict neutral
+    - Fast & transparent; tends to over-predict neutral
 
 - **FinBERT (fine-tuned)**
 
-- BERT pretrained on finance text
+    - BERT pretrained on finance text
 
-- 3-epoch fine-tune; better at context and hedged language
+    - 3-epoch fine-tune; better at context and hedged language
 
 --- 
 
@@ -106,7 +120,7 @@ else:
 
 - Metrics: Macro-F1 (primary) + Accuracy
 
-- Report rough runtime to illustrate cost
+- Same split, same preprocessing across models; results computed on the same test set.
 
 ---
 
@@ -141,7 +155,13 @@ else:
         print("No summary_metrics.csv or prediction CSVs found yet.")
 ```
 
-- Macro-F1 balances classes → punishes “all neutral.”
+- FinBERT dominates: Macro-F1 0.925 vs VADER 0.487 | Accuracy 0.938 vs 0.575.
+
+- Macro-F1 treats neg/neu/pos equally which means neutral-heavy models can’t coast.
+
+- Lift is concentrated in neg/pos recovery from “neutral.”
+
+- Lift comes from context + domain pretraining (hedged language, finance terms).
 
 ---
 
@@ -171,51 +191,97 @@ else:
     print("Add figs/cm_vader.png & figs/cm_finbert.png or prediction CSVs.")
 ```
 
-- Typical error: neutral vs pos/neg.
+---
 
-- FinBERT should reduce those boundary flips.
+## Confusion Matrices continued
 
+- **VADER:** large boundary errors - negatives and positives frequently land in neutral or even opposite classes.
+
+- **FinBERT:** diagonals near 0.92-0.95 across all classes; residual mistakes are weak-polarity headlines.
+
+- Biggest win: FinBERT disambiguates “mixed” headlines (e.g., “revenue up, margins compress”).
+
+- FinBERT turns many VADER false neutrals into correct neg/pos, especially on hedged phrasing (‘despite’, ‘amid’).
 
 ---
 
-## 9) Quick error cases
+## 9) Qualitative error analysis
 
-- “Shares fall despite upbeat outlook” → mixed polarity; VADER often neutral
+- Mixed polarity: “Shares fall despite upbeat outlook.”
 
-- “Margins compress as input costs spike” → negative macro signal; VADER can wobble
+    - VADER: often neutral (cancels signals)
 
-(Examples illustrative.)
+    - FinBERT: negative (weights market reaction)
+
+- Hedging / finance jargon: “Guidance trimmed amid macro uncertainty.”
+
+    - VADER: may drift neutral/positive (focus on “guidance”)
+
+    - FinBERT: negative (learned ‘trimmed/uncertainty’ patterns)
+
+- Forward-looking phrase: “Expects cost headwinds to ease.”
+
+    - Both can wobble; FinBERT more likely positive given “ease”.
+
 
 --- 
 
 ## 10) Cost & practicality
 
-- VADER: CPU-only, milliseconds, simple to explain
+- **VADER**
 
-- FinBERT: GPU preferred for training; inference OK batched on CPU/GPU
+    - Pros: transparent, instant on CPU, zero training.
 
-- Use case drives choice: dashboards vs. model-of-record
+    - Cons: brittle with hedging, negation scope, and domain phrasing.
+
+- **FinBERT (fine-tuned)**
+
+    - Pros: state-of-the-art accuracy, robust to phrasing.
+
+    - Cons: GPU helpful for training; slightly heavier at inference (batch it).
+
+- **Recommendation**
+
+    - Use VADER for lightweight, glanceable dashboards.
+
+    - Use FinBERT for reporting, alerts, or trading features where mistakes cost you.
 
 ---
 
 ## 11) Limits & next steps
 
-- English only; short texts; dataset age → domain drift
+- **Limits**
 
-- Next:
+    - Short headlines only; English; dataset is older and domain drift likely.
 
-- Domain-adapt to 10-K MD&A or earnings calls
+    - No aspect sentiment (e.g., revenue vs. costs vs. guidance).
 
-- Aspect sentiment (guidance vs revenue vs costs)
+- **Next steps**
+
+    - Domain adapt on recent 10-K MD&A / earnings call snippets.
+
+    - Add aspect tags like “rating cut vs. price target raised.”
+
+    - Calibrate thresholds for “uncertain/ambiguous” to avoid false confidence.
+
+---
+
+## 12) Takeaways
+
+- Transformer lift is real: FinBERT turns many VADER “neutral”s into correct neg/pos, driving a big Macro-F1 gain.
+
+- Metric choice matters: Use Macro-F1 as the KPI so the model can’t coast by predicting neutral in an imbalanced 3-class setup.
+
+- When to choose which: VADER for speed/transparency and lightweight dashboards; FinBERT for decisioning/alerts where boundary flips cost you.
+
+- Operationalization is straightforward: Train once; do batched CPU inference, cache predictions, and monitor class drift.
+
+- Next step with impact: Domain-adapt on recent filings/calls and add aspect sentiment (revenue/costs/guidance) to make signals actionable.
 
 ---
 
-##12) Takeaways
+## References
 
-- Same data + split ⇒ fair comparison
-
-- Baseline first (speed, transparency), then transformer (context, lift)
-
-- Clear path to productionizing both
-
----
+- Hutto & Gilbert (2014). VADER: A Parsimonious Rule-Based Model for Sentiment Analysis.
+- Yang, Uy, & Huang (2020). FinBERT: Pre-trained Language Model for Financial Communications (arXiv:2006.08097).
+- Loughran & McDonald (2011). When Is a Liability Not a Liability? Journal of Finance (finance sentiment lexicon context).

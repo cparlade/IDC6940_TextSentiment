@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Christian Parlade (Advisor: Dr. Cohen)">
-<meta name="dcterms.date" content="2025-07-29">
+<meta name="dcterms.date" content="2025-08-06">
 
-<title>Writing a great story for data science projects - Summer 2025 – FinBERT vs VADER</title>
+<title>Stock Market Headline News Sentiment – FinBERT vs VADER</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3823,7 +3823,7 @@ vertical-align: -.125em;
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -3842,23 +3842,19 @@ vertical-align: -.125em;
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Writing a great story for data science projects - Summer 2025</span></a>
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./03_data_analysis.html"> 
-<span class="menu-text">3 Data &amp; EDA</span></a>
+<span class="menu-text">Data &amp; EDA</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./04_results.html"> 
-<span class="menu-text">Results &amp; Discussion</span></a>
+<span class="menu-text">Results</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./slides.html"> 
-<span class="menu-text">Headline News Sentiment &amp; the S&amp;P 500</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./hello.html"> 
-<span class="menu-text">Hello Quarto</span></a>
+<span class="menu-text">Slides</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -3871,14 +3867,35 @@ vertical-align: -.125em;
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">1.1 Research question</a></li>
+  <li><a href="#why-it-matters" id="toc-why-it-matters" class="nav-link" data-scroll-target="#why-it-matters">1.2 Why it matters</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#finetuned-transformer-finbert" id="toc-finetuned-transformer-finbert" class="nav-link" data-scroll-target="#finetuned-transformer-finbert">Fine‑Tuned Transformer – FinBERT</a></li>
+  </ul></li>
+  <li><a href="#analysis-and-results" id="toc-analysis-and-results" class="nav-link" data-scroll-target="#analysis-and-results">Analysis and Results</a>
+  <ul class="collapse">
+  <li><a href="#data-exploration-and-visualization" id="toc-data-exploration-and-visualization" class="nav-link" data-scroll-target="#data-exploration-and-visualization">Data Exploration and Visualization</a></li>
+  <li><a href="#modeling-and-results" id="toc-modeling-and-results" class="nav-link" data-scroll-target="#modeling-and-results">Modeling and Results</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Writing a great story for data science projects - Summer 2025</h1>
-<p class="subtitle lead">Report Template (Quarto)</p>
+<h1 class="title">Stock Market Headline News Sentiment</h1>
+<p class="subtitle lead">One dataset • Two models • A fair comparison</p>
 </div>
 
 
@@ -3895,7 +3912,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 29, 2025</p>
+      <p class="date">August 6, 2025</p>
     </div>
   </div>
   
@@ -3908,28 +3925,8 @@ vertical-align: -.125em;
 
 
 <p>Slides: <a href="slides.html" target="_blank">slides.html</a> ( Go to <code>slides.qmd</code> to edit)</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Remember:</strong> Your goal is to make your audience understand and care about your findings. By crafting a compelling story, you can effectively communicate the value of your data science project.</p>
-<p>Carefully read this template since it has instructions and tips to writing!</p>
-</div>
-</div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The introduction should:</p>
-<ul>
-<li><p>Develop a storyline that captures attention and maintains interest.</p></li>
-<li><p>Your audience is your peers</p></li>
-<li><p>Clearly state the problem or question you’re addressing.</p></li>
-</ul>
 <p>Today’s markets move nearly <strong>instantaneously</strong> to news headlines. A single Bloomberg article or tweet can push a mega-cap’s share price by <strong>hundreds of billions</strong> before most humans can finish reading it. For data-driven traders, headline sentiment is therefore a first-line signal that is used to track order flow, flag risk, and populate real-time dashboards. The question is <strong>which sentiment engine to trust</strong>: a lightweight rule-based lexicon written in 2014, or a 110 million- parameter transformer fine-tuned last night?</p>
 </section>
 <section id="research-question" class="level2">
@@ -3975,13 +3972,6 @@ Important
 </tbody>
 </table>
 <p>The outcome will show whether heavy transformers deliver practical lift over a free, no‑GPU baseline in a realistic “small‑data” finance setting. <!-- --></p>
-<ul>
-<li><p>Introduce why it is relevant needs.</p></li>
-<li><p>Provide an overview of your approach.</p></li>
-</ul>
-<p>Example of writing including citing references:</p>
-<p><em>This is an introduction to ….. regression, which is a non-parametric estimator that estimates the conditional expectation of two variables which is random. The goal of a kernel regression is to discover the non-linear relationship between two random variables. To discover the non-linear relationship, kernel estimator or kernel smoothing is the main method to estimate the curve for non-parametric statistics. In kernel estimator, weight function is known as kernel function <span class="citation" data-cites="efr2008">(<a href="#ref-efr2008" role="doc-biblioref">Efromovich 2008</a>)</span>. Cite this paper <span class="citation" data-cites="bro2014principal">(<a href="#ref-bro2014principal" role="doc-biblioref">Bro and Smilde 2014</a>)</span>. The GEE <span class="citation" data-cites="wang2014">(<a href="#ref-wang2014" role="doc-biblioref">Wang 2014</a>)</span>. The PCA <span class="citation" data-cites="daffertshofer2004pca">(<a href="#ref-daffertshofer2004pca" role="doc-biblioref">Daffertshofer et al. 2004</a>)</span></em>. Topology can be used in machine learning <span class="citation" data-cites="adams2021topology">(<a href="#ref-adams2021topology" role="doc-biblioref">Adams and Moy 2021</a>)</span></p>
-<p><em>This is my work and I want to add more work…</em></p>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -4034,29 +4024,15 @@ Important
 <h2 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h2>
 <section id="data-exploration-and-visualization" class="level3">
 <h3 class="anchored" data-anchor-id="data-exploration-and-visualization">Data Exploration and Visualization</h3>
+</section>
+<section id="modeling-and-results" class="level3">
+<h3 class="anchored" data-anchor-id="modeling-and-results">Modeling and Results</h3>
 <ul>
-<li><p>Describe your data sources and collection process.</p></li>
-<li><p>Present initial findings and insights through visualizations.</p></li>
-<li><p>Highlight unexpected patterns or anomalies.</p></li>
+<li><p>Explain your data preprocessing and cleaning steps.</p></li>
+<li><p>Present your key findings in a clear and concise manner.</p></li>
+<li><p>Use visuals to support your claims.</p></li>
+<li><p><strong>Tell a story about what the data reveals.</strong></p></li>
 </ul>
-<p>A study was conducted to determine how…</p>
-<p><code>{r, warning=FALSE, echo=T, message=FALSE} # loading packages  library(tidyverse) library(knitr) library(ggthemes) library(ggrepel) library(dslabs)</code></p>
-<p>```{r, warning=FALSE, echo=TRUE} # Load Data kable(head(murders))</p>
-<p>ggplot1 = murders %&gt;% ggplot(mapping = aes(x=population/10^6, y=total))</p>
-<p>ggplot1 + geom_point(aes(col=region), size = 4) + geom_text_repel(aes(label=abb)) + scale_x_log10() + scale_y_log10() + geom_smooth(formula = “y~x”, method=lm,se = F)+ xlab(“Populations in millions (log10 scale)”) + ylab(“Total number of murders (log10 scale)”) + ggtitle(“US Gun Murders in 2010”) + scale_color_discrete(name = “Region”)+ theme_bw()</p>
-<pre><code>
-### Modeling and Results
-
--   Explain your data preprocessing and cleaning steps.
-
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
-
-```{r}
-</code></pre>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
@@ -4067,30 +4043,20 @@ Important
 </section>
 </section>
 <section id="references" class="level2">
-
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Hutto &amp; Gilbert (2014). VADER: A Parsimonious Rule-Based Model for Sentiment Analysis.</li>
+<li>Yang, Uy, &amp; Huang (2020). FinBERT: Pre-trained Language Model for Financial Communications (arXiv:2006.08097).</li>
+<li>Loughran &amp; McDonald (2011). When Is a Liability Not a Liability? Journal of Finance (finance sentiment lexicon context).</li>
+</ul>
 
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-adams2021topology" class="csl-entry" role="listitem">
-Adams, Henry, and Michael Moy. 2021. <span>“Topology Applied to Machine Learning: From Global to Local.”</span> <em>Frontiers in Artificial Intelligence</em> 4: 668302.
-</div>
-<div id="ref-bro2014principal" class="csl-entry" role="listitem">
-Bro, Rasmus, and Age K Smilde. 2014. <span>“Principal Component Analysis.”</span> <em>Analytical Methods</em> 6 (9): 2812–31.
-</div>
-<div id="ref-daffertshofer2004pca" class="csl-entry" role="listitem">
-Daffertshofer, Andreas, Claudine JC Lamoth, Onno G Meijer, and Peter J Beek. 2004. <span>“PCA in Studying Coordination and Variability: A Tutorial.”</span> <em>Clinical Biomechanics</em> 19 (4): 415–28.
-</div>
-<div id="ref-efr2008" class="csl-entry" role="listitem">
-Efromovich, S. 2008. <em>Nonparametric Curve Estimation: Methods, Theory, and Applications</em>. Springer Series in Statistics. Springer New York. <a href="https://books.google.com/books?id=mdoLBwAAQBAJ">https://books.google.com/books?id=mdoLBwAAQBAJ</a>.
-</div>
 <div id="ref-hutto2014vader" class="csl-entry" role="listitem">
 Hutto, C. J., and Eric Gilbert. 2014. <span>“VADER: A Parsimonious Rule-Based Model for Sentiment Analysis of Social Media Text.”</span> In <em>Proceedings of the International AAAI Conference on Web and Social Media</em>.
-</div>
-<div id="ref-wang2014" class="csl-entry" role="listitem">
-Wang, Ming. 2014. <span>“Generalized Estimating Equations in Longitudinal Data Analysis: A Review and Recent Developments.”</span> <em>Advances in Statistics</em> 2014.
 </div>
 <div id="ref-yang2024finbert" class="csl-entry" role="listitem">
 Yang, Yi, Mark Christopher Siy Uy, and Allen Huang. 2020. <span>“FinBERT: Pre-Trained Language Model for Financial Communications.”</span> <a href="https://arxiv.org/abs/2006.08097">https://arxiv.org/abs/2006.08097</a>.

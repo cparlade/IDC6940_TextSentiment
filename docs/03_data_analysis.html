@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -128,23 +128,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Writing a great story for data science projects - Summer 2025</span></a>
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./03_data_analysis.html" aria-current="page"> 
-<span class="menu-text">3 Data &amp; EDA</span></a>
+<span class="menu-text">Data &amp; EDA</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./04_results.html"> 
-<span class="menu-text">Results &amp; Discussion</span></a>
+<span class="menu-text">Results</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./slides.html"> 
-<span class="menu-text">Headline News Sentiment &amp; the S&amp;P 500</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./hello.html"> 
-<span class="menu-text">Hello Quarto</span></a>
+<span class="menu-text">Slides</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -157,7 +153,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#load-financial-phrasebank" id="toc-load-financial-phrasebank" class="nav-link active" data-scroll-target="#load-financial-phrasebank">3.1 Load Financial PhraseBank</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -184,17 +188,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="load-financial-phrasebank">3.1 Load Financial PhraseBank</h2>
 <div id="setup" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
-<pre><code>datasets: 2.19.0
-python: /workspaces/IDC6940_TextSentiment/.venv/bin/python3</code></pre>
+<pre><code>python: /home/codespace/.python/current/bin/python</code></pre>
 </div>
 </div>
 <div id="cell-load_phrasebank" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_dataset(<span class="st">"financial_phrasebank"</span>, <span class="st">"sentences_allagree"</span>)  <span class="co"># single split named 'train'</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> pd.DataFrame(ds[<span class="st">'train'</span>])</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># columns: 'sentence', 'label' with labels: 0=negative, 1=neutral, 2=positive</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>label_map <span class="op">=</span> {<span class="dv">0</span>:<span class="st">"negative"</span>, <span class="dv">1</span>:<span class="st">"neutral"</span>, <span class="dv">2</span>:<span class="st">"positive"</span>}</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>raw[<span class="st">'label_name'</span>] <span class="op">=</span> raw[<span class="st">'label'</span>].<span class="bu">map</span>(label_map)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>raw.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> pd.read_csv(<span class="st">"data/raw/phrasebank_sentences.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># columns: 'sentence', 'label' with labels: 0=negative, 1=neutral, 2=positive</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>label_map <span class="op">=</span> {<span class="dv">0</span>:<span class="st">"negative"</span>, <span class="dv">1</span>:<span class="st">"neutral"</span>, <span class="dv">2</span>:<span class="st">"positive"</span>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>raw[<span class="st">'label_name'</span>] <span class="op">=</span> raw[<span class="st">'label'</span>].<span class="bu">map</span>(label_map)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>raw.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="load_phrasebank" class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -211,33 +213,33 @@ python: /workspaces/IDC6940_TextSentiment/.venv/bin/python3</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>According to Gran , the company has no plans t...</td>
+<td>Merrill Lynch analyst Campbell Morgan upgraded...</td>
+<td>2</td>
+<td>positive</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Eriikka S+Âderstr+Âm has previously held sever...</td>
+<td>1</td>
+<td>neutral</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>The webcast may be followed online on the comp...</td>
 <td>1</td>
 <td>neutral</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>For the last quarter of 2010 , Componenta 's n...</td>
-<td>2</td>
-<td>positive</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>In the third quarter of 2010 , net sales incre...</td>
-<td>2</td>
-<td>positive</td>
-</tr>
-<tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>Operating profit rose to EUR 13.1 mn from EUR ...</td>
-<td>2</td>
-<td>positive</td>
+<td>Typical end-uses include roof structures , flo...</td>
+<td>1</td>
+<td>neutral</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>Operating profit totalled EUR 21.1 mn , up fro...</td>
-<td>2</td>
-<td>positive</td>
+<td>The sale will be finalized in September or Oct...</td>
+<td>1</td>
+<td>neutral</td>
 </tr>
 </tbody>
 </table>
@@ -258,10 +260,10 @@ python: /workspaces/IDC6940_TextSentiment/.venv/bin/python3</code></pre>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(train_df), <span class="bu">len</span>(test_df), train_df[<span class="st">'label_name'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="split_save" class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>(1811,
- 453,
+<pre><code>(1807,
+ 452,
  label_name
- neutral     0.615
+ neutral     0.614
  positive    0.252
  negative    0.134
  Name: proportion, dtype: float64)</code></pre>
@@ -322,18 +324,18 @@ python: /workspaces/IDC6940_TextSentiment/.venv/bin/python3</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">negative</td>
 <td>242</td>
-<td>24.3</td>
+<td>24.5</td>
 <td>10.2</td>
 <td>22.0</td>
 <td>5</td>
-<td>54</td>
+<td>56</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">neutral</td>
-<td>1113</td>
+<td>1109</td>
 <td>21.0</td>
-<td>9.8</td>
-<td>19.0</td>
+<td>9.6</td>
+<td>20.0</td>
 <td>2</td>
 <td>81</td>
 </tr>
@@ -341,9 +343,9 @@ python: /workspaces/IDC6940_TextSentiment/.venv/bin/python3</code></pre>
 <td data-quarto-table-cell-role="th">positive</td>
 <td>456</td>
 <td>24.8</td>
-<td>10.4</td>
+<td>10.6</td>
 <td>23.0</td>
-<td>6</td>
+<td>7</td>
 <td>57</td>
 </tr>
 </tbody>
