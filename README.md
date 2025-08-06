@@ -1,4 +1,4 @@
-# Text Sentiment Capstone Project
+# Text Sentiment & the SP500 Capstone Project
 
 This capstone tests whether transformer‑based sentiment (FinBERT) out‑predicts a classic rule‑based lexicon (VADER) for same‑day percentage moves in the S&P 500.
 
