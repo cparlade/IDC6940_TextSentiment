@@ -1,117 +1,221 @@
 ---
 title: "Headline News Sentiment & the S&P 500"
-subtitle: "How does the sentiment in headline news affect the S&P 500 index price"
+subtitle: "One dataset • Two models • A fair comparison"
 author: "Christian Parlade (Advisor: Dr. Cohen)"
-date: '`r Sys.Date()`'
+date: today
 format:
-  revealjs
-course: Capstone Projects in Data Science
-bibliography: references.bib # file contains bibtex for references
-#always_allow_html: true # this allows to get PDF with HTML features
-self-contained: true
-execute: 
+  revealjs:
+    slide-number: true
+    transition: fade
+    center: true
+    theme: simple
+jupyter: python3
+execute:
+  echo: false
   warning: false
   message: false
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
+## 1) What am I testing?
 
-Carefully read this template since it has instructions and tips to
-writing!
+- **Question:** Do short **financial headlines** carry sentiment we can reliably classify?
+- **Why care:** quick market mood checks, features for trading models, sanity-checks on dashboards.
+- **Plan:** same dataset, same split — compare a **rule-based baseline** vs a **transformer**.
 
-More information about `revealjs`:
-<https://quarto.org/docs/reference/formats/presentations/revealjs.html>
-:::
+---
 
-## Introduction  {.smaller}
+## 2) Data (Financial PhraseBank)
 
--   Develop a storyline that captures attention and maintains interest.
+- ~4.8k single-sentence finance statements  
+- Labels: **negative / neutral / positive**
+- Pre-split **80/20 stratified** (same split for both models)
 
--   Your audience is your peers
-
--   Clearly state the problem or question you're addressing.
-
--   Introduce why it is relevant needs.
-
--   Provide an overview of your approach.
-
-In kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]\*
-
-## Methods
-
--   Detail the models or algorithms used.
-
--   Justify your choices based on the problem and data.
-
-
-
-## Data Exploration and Visualization
-
--   Describe your data sources and collection process.
-
--   Present initial findings and insights through visualizations.
-
--   Highlight unexpected patterns or anomalies.
-
-## Data Exploration and Visualization {.smaller}
-
-A study was conducted to determine how...
-
-```{r, warning=FALSE, echo=F, message=FALSE}
-# loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
+```{python}
+from pathlib import Path
+import pandas as pd
+p = Path("data/processed")
+ok = (p/"phrasebank_train.csv").exists() and (p/"phrasebank_test.csv").exists()
+print("Train/Test CSVs present:", ok)
+if ok:
+    train = pd.read_csv(p/"phrasebank_train.csv")
+    test  = pd.read_csv(p/"phrasebank_test.csv")
+    print("Train size:", len(train), " Test size:", len(test))
 ```
 
-```{r, warning=FALSE, echo=F}
-# Load Data
-#kable(head(murders))
+---
 
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
+## 3) EDA: class balance
 
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
-
+```{python}
+import matplotlib.pyplot as plt
+import pandas as pd
+from pathlib import Path
+p = Path("data/processed")
+if (p/"phrasebank_train.csv").exists() and (p/"phrasebank_test.csv").exists():
+    train = pd.read_csv(p/"phrasebank_train.csv")
+    test  = pd.read_csv(p/"phrasebank_test.csv")
+    fig, ax = plt.subplots(figsize=(6,3.2))
+    pd.concat({
+        "train": train['label_name'].value_counts(normalize=True).rename("share"),
+        "test":  test['label_name'].value_counts(normalize=True).rename("share")
+    }, axis=1).sort_index().plot.bar(ax=ax)
+    ax.set_ylabel("proportion"); ax.set_xlabel("label"); plt.tight_layout(); plt.show()
+else:
+    print("Waiting on phrasebank_train/test CSVs.")
 ```
 
-## Modeling and Results
+---
 
--   Explain your data preprocessing and cleaning steps.
+## 4) EDA: length sanity check
 
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
-
-```{r}
-
+```{python}
+import seaborn as sns, matplotlib.pyplot as plt
+if 'train' in globals():
+    train['len'] = train['sentence'].str.split().map(len)
+    ax = sns.kdeplot(data=train, x='len', hue='label_name', common_norm=False, fill=True)
+    ax.set_xlabel("tokens per sentence"); plt.tight_layout(); plt.show()
+else:
+    print("Length plot skipped (no train CSV).")
 ```
 
-## Conclusion
+- Neutral is typically largest -> easy baseline: “predict neutral.”
 
--   Summarize your key findings.
+- Models need to beat that without collapsing into neutral.
 
--   Discuss the implications of your results.
+---
 
-## References
+## 5) Models 
+
+- **VADER (baseline)**
+
+- Lexicon + rules (negation, intensity, punctuation, ALL-CAPS)
+
+- Fast & transparent; tends to over-predict neutral
+
+- **FinBERT (fine-tuned)**
+
+- BERT pretrained on finance text
+
+- 3-epoch fine-tune; better at context and hedged language
+
+--- 
+
+## 6) Train/test process 
+
+- Keep exact same 80/20 stratified split
+
+- Metrics: Macro-F1 (primary) + Accuracy
+
+- Report rough runtime to illustrate cost
+
+---
+
+## 7) Results
+
+```{python}
+import pandas as pd, numpy as np
+from pathlib import Path
+tbl = Path("results/summary_metrics.csv")
+if tbl.exists():
+    res = pd.read_csv(tbl)
+    display(res.round(3))
+else:
+    # Compute quick table if preds exist
+    vp, fp = Path("data/processed/vader_preds.csv"), Path("data/processed/finbert_preds.csv")
+    from sklearn.metrics import f1_score, accuracy_score
+    rows=[]
+    if vp.exists():
+        v = pd.read_csv(vp); y = v['label_name']
+        rows.append(("VADER",
+                     round(f1_score(y, v['pred'], average='macro'),3),
+                     round(accuracy_score(y, v['pred']),3)))
+    if fp.exists():
+        f = pd.read_csv(fp); y = f['label_name']
+        rows.append(("FinBERT (ft)",
+                     round(f1_score(y, f['pred'], average='macro'),3),
+                     round(accuracy_score(y, f['pred']),3)))
+    if rows:
+        res = pd.DataFrame(rows, columns=["Model","Macro-F1","Accuracy"])
+        display(res)
+    else:
+        print("No summary_metrics.csv or prediction CSVs found yet.")
+```
+
+- Macro-F1 balances classes → punishes “all neutral.”
+
+---
+
+## 8) Confusion matrices
+
+```{python}
+import matplotlib.pyplot as plt, seaborn as sns
+from sklearn.metrics import confusion_matrix
+from pathlib import Path
+labels = ["negative","neutral","positive"]
+pv, pf = Path("figs/cm_vader.png"), Path("figs/cm_finbert.png")
+vp, fp = Path("data/processed/vader_preds.csv"), Path("data/processed/finbert_preds.csv")
+
+if pv.exists() and pf.exists():
+    from PIL import Image
+    fig, axes = plt.subplots(1,2, figsize=(9,3.6), constrained_layout=True)
+    axes[0].imshow(Image.open(pv)); axes[0].axis("off"); axes[0].set_title("VADER")
+    axes[1].imshow(Image.open(pf)); axes[1].axis("off"); axes[1].set_title("FinBERT")
+    plt.show()
+elif vp.exists():
+    v = pd.read_csv(vp); y = v['label_name']
+    fig, ax = plt.subplots(1,1, figsize=(4.5,3.6), constrained_layout=True)
+    cm = confusion_matrix(y, v['pred'], labels=labels)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels, ax=ax)
+    ax.set_title("VADER"); ax.set_xlabel("Predicted"); ax.set_ylabel("True"); plt.show()
+else:
+    print("Add figs/cm_vader.png & figs/cm_finbert.png or prediction CSVs.")
+```
+
+- Typical error: neutral vs pos/neg.
+
+- FinBERT should reduce those boundary flips.
+
+
+---
+
+## 9) Quick error cases
+
+- “Shares fall despite upbeat outlook” → mixed polarity; VADER often neutral
+
+- “Margins compress as input costs spike” → negative macro signal; VADER can wobble
+
+(Examples illustrative.)
+
+--- 
+
+## 10) Cost & practicality
+
+- VADER: CPU-only, milliseconds, simple to explain
+
+- FinBERT: GPU preferred for training; inference OK batched on CPU/GPU
+
+- Use case drives choice: dashboards vs. model-of-record
+
+---
+
+## 11) Limits & next steps
+
+- English only; short texts; dataset age → domain drift
+
+- Next:
+
+- Domain-adapt to 10-K MD&A or earnings calls
+
+- Aspect sentiment (guidance vs revenue vs costs)
+
+---
+
+##12) Takeaways
+
+- Same data + split ⇒ fair comparison
+
+- Baseline first (speed, transparency), then transformer (context, lift)
+
+- Clear path to productionizing both
+
+---
