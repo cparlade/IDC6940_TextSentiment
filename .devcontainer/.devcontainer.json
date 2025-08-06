@@ -1,20 +1,17 @@
 {
-  "name": "Quarto + Python",
-  "image": "ghcr.io/quarto-dev/quarto:latest",
+  "name": "quarto-python",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
   "features": {
-    "ghcr.io/devcontainers/features/python:1": { "version": "3.10" }
+    "ghcr.io/devcontainers/features/quarto:1": {}
   },
-  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt || true",
+  "postCreateCommand": "python -m pip install --upgrade pip && pip install -r requirements.txt || true",
   "customizations": {
     "vscode": {
       "extensions": [
-        "quarto.quarto",
         "ms-python.python",
-        "ms-toolsai.jupyter"
-      ],
-      "settings": {
-        "python.defaultInterpreterPath": ".venv/bin/python"
-      }
+        "ms-toolsai.jupyter",
+        "quarto.quarto"
+      ]
     }
   }
 }
