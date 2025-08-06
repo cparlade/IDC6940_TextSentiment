@@ -110,5 +110,82 @@
     "title": "Headline News Sentiment & the S&P 500",
     "section": "References",
     "text": "References\n\n\n\n\nBro, Rasmus, and Age K Smilde. 2014. “Principal Component Analysis.” Analytical Methods 6 (9): 2812–31.\n\n\nDaffertshofer, Andreas, Claudine JC Lamoth, Onno G Meijer, and Peter J Beek. 2004. “PCA in Studying Coordination and Variability: A Tutorial.” Clinical Biomechanics 19 (4): 415–28.\n\n\nEfromovich, S. 2008. Nonparametric Curve Estimation: Methods, Theory, and Applications. Springer Series in Statistics. Springer New York. https://books.google.com/books?id=mdoLBwAAQBAJ.\n\n\nWang, Ming. 2014. “Generalized Estimating Equations in Longitudinal Data Analysis: A Review and Recent Developments.” Advances in Statistics 2014."
+  },
+  {
+    "objectID": "slides.html#what-am-i-testing",
+    "href": "slides.html#what-am-i-testing",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "1) What am I testing?",
+    "text": "1) What am I testing?\n\nQuestion: Do short financial headlines carry sentiment we can reliably classify?\nWhy care: quick market mood checks, features for trading models, sanity-checks on dashboards.\nPlan: same dataset, same split — compare a rule-based baseline vs a transformer."
+  },
+  {
+    "objectID": "slides.html#data-financial-phrasebank",
+    "href": "slides.html#data-financial-phrasebank",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "2) Data (Financial PhraseBank)",
+    "text": "2) Data (Financial PhraseBank)\n\n~4.8k single-sentence finance statements\n\nLabels: negative / neutral / positive\nPre-split 80/20 stratified (same split for both models)\n\n\n\nTrain/Test CSVs present: True\nTrain size: 1811  Test size: 453"
+  },
+  {
+    "objectID": "slides.html#eda-class-balance",
+    "href": "slides.html#eda-class-balance",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "3) EDA: class balance",
+    "text": "3) EDA: class balance"
+  },
+  {
+    "objectID": "slides.html#eda-length-sanity-check",
+    "href": "slides.html#eda-length-sanity-check",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "4) EDA: length sanity check",
+    "text": "4) EDA: length sanity check\n\n\nNeutral is typically largest -&gt; easy baseline: “predict neutral.”\nModels need to beat that without collapsing into neutral."
+  },
+  {
+    "objectID": "slides.html#models",
+    "href": "slides.html#models",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "5) Models",
+    "text": "5) Models\n\nVADER (baseline)\nLexicon + rules (negation, intensity, punctuation, ALL-CAPS)\nFast & transparent; tends to over-predict neutral\nFinBERT (fine-tuned)\nBERT pretrained on finance text\n3-epoch fine-tune; better at context and hedged language"
+  },
+  {
+    "objectID": "slides.html#traintest-process",
+    "href": "slides.html#traintest-process",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "6) Train/test process",
+    "text": "6) Train/test process\n\nKeep exact same 80/20 stratified split\nMetrics: Macro-F1 (primary) + Accuracy\nReport rough runtime to illustrate cost"
+  },
+  {
+    "objectID": "slides.html#results",
+    "href": "slides.html#results",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "7) Results",
+    "text": "7) Results\n\n\n\n\n\n\n\n\n\nModel\nMacro‑F1\nAccuracy\n\n\n\n\n0\nVADER\n0.493\n0.583\n\n\n1\nFinBERT\n0.963\n0.969\n\n\n\n\n\n\n\n\nMacro-F1 balances classes → punishes “all neutral.”"
+  },
+  {
+    "objectID": "slides.html#confusion-matrices",
+    "href": "slides.html#confusion-matrices",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "8) Confusion matrices",
+    "text": "8) Confusion matrices\n\n\nTypical error: neutral vs pos/neg.\nFinBERT should reduce those boundary flips."
+  },
+  {
+    "objectID": "slides.html#quick-error-cases",
+    "href": "slides.html#quick-error-cases",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "9) Quick error cases",
+    "text": "9) Quick error cases\n\n“Shares fall despite upbeat outlook” → mixed polarity; VADER often neutral\n“Margins compress as input costs spike” → negative macro signal; VADER can wobble\n\n(Examples illustrative.)"
+  },
+  {
+    "objectID": "slides.html#cost-practicality",
+    "href": "slides.html#cost-practicality",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "10) Cost & practicality",
+    "text": "10) Cost & practicality\n\nVADER: CPU-only, milliseconds, simple to explain\nFinBERT: GPU preferred for training; inference OK batched on CPU/GPU\nUse case drives choice: dashboards vs. model-of-record"
+  },
+  {
+    "objectID": "slides.html#limits-next-steps",
+    "href": "slides.html#limits-next-steps",
+    "title": "Headline News Sentiment & the S&P 500",
+    "section": "11) Limits & next steps",
+    "text": "11) Limits & next steps\n\nEnglish only; short texts; dataset age → domain drift\nNext:\nDomain-adapt to 10-K MD&A or earnings calls\nAspect sentiment (guidance vs revenue vs costs)"
   }
 ]

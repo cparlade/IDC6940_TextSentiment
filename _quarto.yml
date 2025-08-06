@@ -6,6 +6,9 @@ project:
   - 03_data_analysis.qmd
   - 04_results.qmd
   - slides.qmd   # keep if you use it
+  - hello.qmd
+
+jupyter: python3
 
 website:
   title: "FinBERT vs VADER"
@@ -14,6 +17,8 @@ website:
       - file: index.qmd
       - file: 03_data_analysis.qmd
       - file: 04_results.qmd
+      - file: slides.qmd
+      - file: hello.qmd
 
 format:
   html:

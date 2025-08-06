@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+vaderSentiment
+datasets<3.0
+transformers
+torch
+accelerate
+ipykernel

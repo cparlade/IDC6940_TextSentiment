@@ -1,0 +1,132 @@
+---
+title: "Results & Discussion"
+jupyter: python3
+freeze: auto
+---
+
+```{python}
+#| label: load_preds
+from pathlib import Path
+import pandas as pd, numpy as np
+
+PROC = Path("data/processed")
+test_path = PROC/"phrasebank_test.csv"
+assert test_path.exists(), "Run 03_data_analysis.qmd first to create data/processed/phrasebank_test.csv"
+
+# Official test split (ground truth)
+test = pd.read_csv(test_path).reset_index().rename(columns={"index":"id"})
+labels = ["negative","neutral","positive"]
+
+def load_and_align(pred_path, test_df=test):
+    df = pd.read_csv(pred_path)
+    if "pred" not in df.columns:
+        raise ValueError(f"{pred_path} must contain a 'pred' column.")
+
+    # normalize label text
+    for col in ("pred","label_name"):
+        if col in df.columns and df[col].dtype == object:
+            df[col] = df[col].str.lower().str.strip()
+
+    # align by id -> sentence -> order
+    if "id" in df.columns:
+        merged = test_df.merge(df[["id","pred"]], on="id", how="left")
+    elif "sentence" in df.columns:
+        merged = test_df.merge(df[["sentence","pred"]], on="sentence", how="left")
+    else:
+        if len(df) != len(test_df):
+            raise ValueError(f"Length mismatch: {pred_path} has {len(df)} rows; test has {len(test_df)}")
+        merged = test_df.copy()
+        merged["pred"] = df["pred"].values
+
+    if merged["pred"].isna().any():
+        missing = merged["pred"].isna().sum()
+        raise ValueError(f"{pred_path}: {missing} predictions missing after alignment")
+
+    # keep only allowed labels
+    bad = ~merged["pred"].isin(labels)
+    if bad.any():
+        raise ValueError(f"{pred_path}: found labels outside {labels}: {sorted(merged.loc[bad,'pred'].unique())}")
+    return merged
+
+vader = load_and_align(PROC/"vader_preds.csv")
+finb  = load_and_align(PROC/"finbert_preds.csv")
+
+y_true = test["label_name"].str.lower()
+y_vdr  = vader["pred"]
+y_fnb  = finb["pred"]
+
+len(test), y_true.value_counts()
+```
+
+```{python}
+#| label: summary-metrics
+from sklearn.metrics import f1_score, accuracy_score
+import pandas as pd
+
+summary = pd.DataFrame({
+    "Model": ["VADER", "FinBERT"],
+    "Macro‑F1": [
+        f1_score(y_true, y_vdr, average="macro"),
+        f1_score(y_true, y_fnb, average="macro"),
+    ],
+    "Accuracy": [
+        accuracy_score(y_true, y_vdr),
+        accuracy_score(y_true, y_fnb),
+    ],
+}).round(3)
+summary
+```
+
+```{python}
+#| label: cms
+#| fig-cap: "Confusion matrices (rows = true, cols = pred)"
+#| fig-width: 9
+#| fig-height: 3.6
+import seaborn as sns, matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+
+fig, axes = plt.subplots(1,2, figsize=(9,3.6), constrained_layout=True)
+for ax, name, y_pred in zip(axes, ["VADER","FinBERT"], [y_vdr, y_fnb]):
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                xticklabels=labels, yticklabels=labels, ax=ax)
+    ax.set_title(name); ax.set_xlabel("Predicted"); ax.set_ylabel("True")
+plt.show()
+```
+
+```{python}
+#| label: cms-norm
+#| fig-cap: "Row-normalized confusion matrices"
+#| fig-width: 9
+#| fig-height: 3.6
+fig, axes = plt.subplots(1,2, figsize=(9,3.6), constrained_layout=True)
+for ax, name, y_pred in zip(axes, ["VADER","FinBERT"], [y_vdr, y_fnb]):
+    cm = confusion_matrix(y_true, y_pred, labels=labels, normalize="true")
+    sns.heatmap(cm, annot=True, fmt=".2f", cmap="Blues", vmin=0, vmax=1,
+                xticklabels=labels, yticklabels=labels, ax=ax)
+    ax.set_title(name + " (normalized)"); ax.set_xlabel("Predicted"); ax.set_ylabel("True")
+plt.show()
+```
+
+```{python}
+#| label: save-artifacts
+from pathlib import Path
+RESULTS = Path("results"); RESULTS.mkdir(exist_ok=True)
+FIGS = Path("figs"); FIGS.mkdir(exist_ok=True)
+
+summary.to_csv(RESULTS/"summary_metrics.csv", index=False)
+
+def save_cm(y_pred, path, title):
+    cm = confusion_matrix(y_true, y_pred, labels=labels, normalize="true")
+    import seaborn as sns, matplotlib.pyplot as plt
+    plt.figure(figsize=(4.2,3.4))
+    sns.heatmap(cm, annot=True, fmt=".2f", cmap="Blues",
+                xticklabels=labels, yticklabels=labels)
+    plt.xlabel("Predicted"); plt.ylabel("True"); plt.title(title)
+    plt.tight_layout(); plt.savefig(path, dpi=150); plt.close()
+
+save_cm(y_vdr, FIGS/"cm_vader.png",   "VADER — Confusion Matrix")
+save_cm(y_fnb, FIGS/"cm_finbert.png", "FinBERT — Confusion Matrix")
+
+"Saved results/summary_metrics.csv, figs/cm_vader.png, figs/cm_finbert.png"
+```

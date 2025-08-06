@@ -1,0 +1,80 @@
+---
+title: "3  Data & EDA"
+jupyter: python3
+freeze: auto
+---
+
+## 3.1 Load Financial PhraseBank
+
+```{python}
+#| label: setup
+#| echo: false
+import os, time, pathlib, numpy as np, pandas as pd, seaborn as sns, matplotlib.pyplot as plt
+import sys, datasets
+print("datasets:", datasets.__version__)
+print("python:", sys.executable)
+from datasets import load_dataset
+from sklearn.model_selection import train_test_split
+
+DATA_DIR = pathlib.Path("data/processed")
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+RNG_SEED = 42
+np.random.seed(RNG_SEED)
+```
+
+```{python}
+#| label: load_phrasebank
+ds = load_dataset("financial_phrasebank", "sentences_allagree")  # single split named 'train'
+raw = pd.DataFrame(ds['train'])
+# columns: 'sentence', 'label' with labels: 0=negative, 1=neutral, 2=positive
+label_map = {0:"negative", 1:"neutral", 2:"positive"}
+raw['label_name'] = raw['label'].map(label_map)
+raw.head()
+```
+
+```{python}
+#| label: split_save
+# Stratified 80/20 split
+train_df, test_df = train_test_split(
+    raw[['sentence','label','label_name']],
+    test_size=0.20,
+    random_state=RNG_SEED,
+    stratify=raw['label'])
+
+train_df.to_csv(DATA_DIR/"phrasebank_train.csv", index=False)
+test_df.to_csv(DATA_DIR/"phrasebank_test.csv", index=False)
+
+len(train_df), len(test_df), train_df['label_name'].value_counts(normalize=True).round(3)
+```
+
+```{python}
+#| fig-cap: "Class balance (train vs. test)"
+#| label: class_balance
+fig, ax = plt.subplots()
+pd.concat({
+    "train": train_df['label_name'].value_counts(normalize=True).rename("share"),
+    "test":  test_df['label_name'].value_counts(normalize=True).rename("share")
+}, axis=1).sort_index().plot.bar(ax=ax)
+ax.set_ylabel("proportion")
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+#| fig-cap: "Distribution of headline length (tokens ≈ whitespace split)"
+#| label: length_hist
+for df, name in [(train_df, "train"), (test_df, "test")]:
+    df['len'] = df['sentence'].str.split().map(len)
+
+desc = train_df.groupby('label_name')['len'].agg(
+    ['count','mean','std','median','min','max']
+).round(1)
+desc
+```
+
+```{python}
+#| label: length_kde
+sns.kdeplot(data=train_df, x='len', hue='label_name', common_norm=False, fill=True)
+plt.xlabel("tokens per sentence")
+plt.tight_layout(); plt.show()
+```
