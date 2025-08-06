@@ -1,8 +1,0 @@
----
-title: "Hello Quarto"
-jupyter: python3
----
-
-```{python}
-print("Quarto is working!")
-```
