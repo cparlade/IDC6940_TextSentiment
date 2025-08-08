@@ -4328,7 +4328,7 @@ window.Quarto = {
 <section id="data-exploration" class="level3">
 <h3 class="anchored" data-anchor-id="data-exploration">Data exploration</h3>
 <p>We begin by loading the two pre-split CSVs:</p>
-<div id="75b8e0a4" class="cell" data-execution_count="1">
+<div id="8ca4a2d6" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -4346,7 +4346,7 @@ window.Quarto = {
 <section id="class-balance" class="level4">
 <h4 class="anchored" data-anchor-id="class-balance">Class balance</h4>
 <p>Neutral makes up ≈ 46 % of both splits, the other two classes ≈ 27 % each:</p>
-<div id="fa0115e8" class="cell" data-execution_count="2">
+<div id="d7d34b49" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(train[<span class="st">&quot;label_name&quot;</span>]</span>
@@ -4367,7 +4367,7 @@ window.Quarto = {
 <section id="headline-length" class="level4">
 <h4 class="anchored" data-anchor-id="headline-length">Headline length</h4>
 <p>Headlines cluster at 8–16 tokens:</p>
-<div id="942ea4e2" class="cell" data-execution_count="3">
+<div id="503b9ebf" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>train[<span class="st">&quot;len&quot;</span>] <span class="op">=</span> train[<span class="st">&quot;sentence&quot;</span>].<span class="bu">str</span>.split().<span class="bu">map</span>(<span class="bu">len</span>)</span>
@@ -4429,7 +4429,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>Both models score the same 968-row test split:</p>
-<div id="7aacce0e" class="cell" data-execution_count="4">
+<div id="fd252edc" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score, accuracy_score</span>
@@ -4469,7 +4469,7 @@ window.Quarto = {
 </section>
 <section id="confusion-matrices" class="level3">
 <h3 class="anchored" data-anchor-id="confusion-matrices">Confusion matrices</h3>
-<div id="cfe4a9f7" class="cell" data-execution_count="5">
+<div id="cfb75add" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns, matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -4568,7 +4568,7 @@ window.Quarto = {
 </li>
 <li>Complexity is a single pass through sentences</li>
 </ul>
-<div id="f0958263" class="cell" data-execution_count="6">
+<div id="6bcee22d" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, numpy <span class="im">as</span> np</span>
